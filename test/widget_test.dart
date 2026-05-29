@@ -1,11 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_starter/main.dart';
+import 'package:flutter_starter/app/app.dart';
 
 void main() {
-  testWidgets('App boots with starter text', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App shows the temporary shell screen', (WidgetTester tester) async {
+    await tester.pumpWidget(const App());
 
-    expect(find.text('Flutter Starter'), findsOneWidget);
+    expect(find.text('Employee Attendance'), findsOneWidget);
+    expect(find.text('Application shell ready'), findsOneWidget);
   });
 }
