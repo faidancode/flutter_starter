@@ -1,16 +1,33 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_starter/app/app.dart';
+import 'package:flutter_starter/app/router.dart';
 
 void main() {
-  testWidgets('App shows the themed temporary shell screen', (
+  testWidgets('Initial route shows the login placeholder', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
 
-    expect(find.text('Employee Attendance'), findsOneWidget);
-    expect(find.text('Application shell ready'), findsOneWidget);
-    expect(find.text('Quick preview'), findsOneWidget);
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Login placeholder'), findsOneWidget);
+  });
+
+  testWidgets('Dashboard route shows the dashboard placeholder', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      const App(initialLocation: AppRoutePaths.dashboard),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Dashboard placeholder'), findsOneWidget);
+  });
+
+  testWidgets('Unknown route shows not found', (WidgetTester tester) async {
+    await tester.pumpWidget(const App(initialLocation: '/unknown'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Not Found'), findsOneWidget);
   });
 }
