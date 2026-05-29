@@ -1,37 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'theme.dart';
+
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF0F766E),
-      brightness: Brightness.light,
-    );
-
     return MaterialApp(
       title: 'Employee Attendance',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: colorScheme,
-        scaffoldBackgroundColor: const Color(0xFFF4F7F5),
-        appBarTheme: AppBarTheme(
-          backgroundColor: colorScheme.surface,
-          foregroundColor: colorScheme.onSurface,
-          centerTitle: false,
-          elevation: 0,
-        ),
-        cardTheme: CardThemeData(
-          color: Colors.white,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ),
-      ),
+      theme: AppTheme.light(),
       home: const _TemporaryHomeScreen(),
     );
   }
@@ -49,40 +28,48 @@ class _TemporaryHomeScreen extends StatelessWidget {
         title: const Text('Employee Attendance'),
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Application shell ready',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+                style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 12),
               Text(
-                'Phase 1.a sets up the root app, ProviderScope, and a temporary mobile-first screen.',
-                style: theme.textTheme.bodyLarge?.copyWith(height: 1.4),
+                'Phase 1.b moves the visual baseline into a reusable app theme with mobile-friendly spacing and controls.',
+                style: theme.textTheme.bodyLarge,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.phone_android_rounded,
-                        color: theme.colorScheme.primary,
+                      Text(
+                        'Quick preview',
+                        style: theme.textTheme.titleMedium,
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'The next phases will replace this screen with routing and feature modules.',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            height: 1.4,
-                          ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'These controls exist to validate text, input, and button theming before feature work begins.',
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 16),
+                      const TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Employee ID',
+                          hintText: 'Enter your employee ID',
+                          prefixIcon: Icon(Icons.badge_outlined),
                         ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Continue'),
                       ),
                     ],
                   ),
