@@ -103,4 +103,61 @@ void main() {
     expect(passwordField.obscureText, isFalse);
     expect(find.byTooltip('Hide password'), findsOneWidget);
   });
+
+  testWidgets('LoginForm disables submit controls while submitting', (
+    WidgetTester tester,
+  ) async {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    var submitCount = 0;
+
+    addTearDown(emailController.dispose);
+    addTearDown(passwordController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: LoginForm(
+            emailController: emailController,
+            passwordController: passwordController,
+            isSubmitting: true,
+            onSubmit: (_, _) => submitCount++,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
+
+    final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+    expect(button.onPressed, isNull);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(submitCount, 0);
+  });
+
+  testWidgets('LoginForm shows parent-provided error message', (
+    WidgetTester tester,
+  ) async {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
+    addTearDown(emailController.dispose);
+    addTearDown(passwordController.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: LoginForm(
+            emailController: emailController,
+            passwordController: passwordController,
+            errorMessage: 'Invalid email or password.',
+            onSubmit: (_, _) {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Invalid email or password.'), findsOneWidget);
+  });
 }

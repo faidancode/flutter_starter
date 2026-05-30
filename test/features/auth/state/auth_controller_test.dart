@@ -43,6 +43,34 @@ void main() {
       expect(state.accessToken, 'fake-access-token');
     });
 
+    test(
+      'login can change state to failure for fake invalid credentials',
+      () async {
+        final container = ProviderContainer();
+        final states = <AuthState>[];
+        final subscription = container.listen(
+          authControllerProvider,
+          (_, next) => states.add(next),
+          fireImmediately: true,
+        );
+        addTearDown(subscription.close);
+        addTearDown(container.dispose);
+
+        await container
+            .read(authControllerProvider.notifier)
+            .login('employee@example.com', 'fail');
+
+        expect(states, [
+          isA<AuthUnauthenticated>(),
+          isA<AuthAuthenticating>(),
+          isA<AuthFailure>(),
+        ]);
+
+        final state = container.read(authControllerProvider) as AuthFailure;
+        expect(state.message, 'Invalid email or password.');
+      },
+    );
+
     test('logout changes state to unauthenticated', () async {
       final container = ProviderContainer();
       addTearDown(container.dispose);

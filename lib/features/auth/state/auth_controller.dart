@@ -30,6 +30,13 @@ class AuthController extends Notifier<AuthState> {
 
     await Future<void>.delayed(_fakeDelay);
 
+    if (password == 'fail') {
+      // Temporary failure path so the UI can learn how to render auth errors
+      // before the real API starts returning invalid-credential responses.
+      state = const AuthState.failure('Invalid email or password.');
+      return;
+    }
+
     // Fake successful login.
     // Only AuthAuthenticated contains the access token, and it stays in memory.
     state = AuthState.authenticated(

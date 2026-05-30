@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../state/auth_controller.dart';
+import '../state/auth_state.dart';
 import 'widgets/login_form.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   // Controllers let the page own and dispose the text input state.
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -24,6 +27,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Watching auth state makes this page rebuild when login starts, fails,
+    // or succeeds. The controller remains the only place that mutates auth.
+    final authState = ref.watch(authControllerProvider);
+    final isAuthenticating = authState is AuthAuthenticating;
+    final errorMessage = authState is AuthFailure ? authState.message : null;
     // Add bottom padding when the keyboard is open so fields remain reachable.
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
@@ -54,8 +62,14 @@ class _LoginPageState extends State<LoginPage> {
                       LoginForm(
                         emailController: _emailController,
                         passwordController: _passwordController,
+                        isSubmitting: isAuthenticating,
+                        errorMessage: errorMessage,
                         onSubmit: _handleSubmit,
                       ),
+                      if (authState is AuthAuthenticated) ...[
+                        const SizedBox(height: 12),
+                        _AuthSuccessMessage(email: authState.user.email),
+                      ],
                       const Spacer(),
                       const SizedBox(height: 24),
                       Center(
@@ -76,9 +90,32 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _handleSubmit(String email, String password) {
-    // Real login behavior is added in later phases; this only closes the keyboard.
+  Future<void> _handleSubmit(String email, String password) async {
+    // The UI submits credentials to the controller, then reacts to provider
+    // state changes instead of storing its own login result.
     FocusScope.of(context).unfocus();
+    await ref.read(authControllerProvider.notifier).login(email, password);
+  }
+}
+
+class _AuthSuccessMessage extends StatelessWidget {
+  const _AuthSuccessMessage({required this.email});
+
+  final String email;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Semantics(
+      liveRegion: true,
+      child: Text(
+        'Signed in as $email. Dashboard routing is added in a later phase.',
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: colorScheme.primary),
+      ),
+    );
   }
 }
 

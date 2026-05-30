@@ -9,11 +9,21 @@ class LoginForm extends StatefulWidget {
     required this.emailController,
     required this.passwordController,
     required this.onSubmit,
+    this.isSubmitting = false,
+    this.errorMessage,
   });
 
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final LoginSubmitCallback onSubmit;
+
+  // Parent-owned loading state keeps this widget reusable and unaware of
+  // Riverpod/auth implementation details.
+  final bool isSubmitting;
+
+  // Parent-owned error text lets the controller decide failures while the form
+  // only decides how to display them.
+  final String? errorMessage;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -39,6 +49,7 @@ class _LoginFormState extends State<LoginForm> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: widget.emailController,
+                enabled: !widget.isSubmitting,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.email],
@@ -52,6 +63,7 @@ class _LoginFormState extends State<LoginForm> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: widget.passwordController,
+                enabled: !widget.isSubmitting,
                 obscureText: _obscurePassword,
                 textInputAction: TextInputAction.done,
                 autofillHints: const [AutofillHints.password],
@@ -65,7 +77,9 @@ class _LoginFormState extends State<LoginForm> {
                     tooltip: _obscurePassword
                         ? 'Show password'
                         : 'Hide password',
-                    onPressed: _togglePasswordVisibility,
+                    onPressed: widget.isSubmitting
+                        ? null
+                        : _togglePasswordVisibility,
                     icon: Icon(
                       _obscurePassword
                           ? Icons.visibility_outlined
@@ -74,8 +88,25 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
+              if (widget.errorMessage != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  widget.errorMessage!,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
-              ElevatedButton(onPressed: _submit, child: const Text('Login')),
+              ElevatedButton(
+                onPressed: widget.isSubmitting ? null : _submit,
+                child: widget.isSubmitting
+                    ? const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Login'),
+              ),
             ],
           ),
         ),
@@ -106,6 +137,10 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _submit() {
+    if (widget.isSubmitting) {
+      return;
+    }
+
     final isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) {
       return;

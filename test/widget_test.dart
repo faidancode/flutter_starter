@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_starter/app/app.dart';
@@ -8,7 +9,7 @@ void main() {
   testWidgets('Initial route shows the login page', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const App());
+    await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pumpAndSettle();
 
     expect(find.text('Employee Attendance'), findsOneWidget);
@@ -18,7 +19,7 @@ void main() {
   });
 
   testWidgets('Login fields can be filled', (WidgetTester tester) async {
-    await tester.pumpWidget(const App());
+    await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pumpAndSettle();
 
     await tester.enterText(
@@ -35,7 +36,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      const App(initialLocation: AppRoutePaths.dashboard),
+      const ProviderScope(child: App(initialLocation: AppRoutePaths.dashboard)),
     );
     await tester.pumpAndSettle();
 
@@ -43,7 +44,9 @@ void main() {
   });
 
   testWidgets('Unknown route shows not found', (WidgetTester tester) async {
-    await tester.pumpWidget(const App(initialLocation: '/unknown'));
+    await tester.pumpWidget(
+      const ProviderScope(child: App(initialLocation: '/unknown')),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Not Found'), findsOneWidget);
