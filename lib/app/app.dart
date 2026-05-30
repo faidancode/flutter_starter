@@ -17,6 +17,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  // Keep one router instance for the lifetime of the app widget.
   late final GoRouter _router = createAppRouter(
     initialLocation: widget.initialLocation,
   );

@@ -6,6 +6,7 @@ import '../features/auth/presentation/login_page.dart';
 class AppRoutePaths {
   AppRoutePaths._();
 
+  // Central route paths keep navigation calls from scattering string literals.
   static const login = '/login';
   static const dashboard = '/dashboard';
   static const notFound = '/not-found';
@@ -41,6 +42,7 @@ GoRouter createAppRouter({
         builder: (context, state) => const NotFoundPlaceholderPage(),
       ),
     ],
+    // Unknown paths render a page instead of leaving the user on a blank screen.
     errorBuilder: (context, state) => const NotFoundPlaceholderPage(),
   );
 }

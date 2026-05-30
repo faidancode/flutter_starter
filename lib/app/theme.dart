@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
+  // Shared visual tokens used by the app-level Material theme.
   static const Color primaryColor = Color(0xFF0F766E);
   static const Color backgroundColor = Color(0xFFF4F7F5);
   static const Color surfaceColor = Colors.white;
   static const Color textColor = Color(0xFF17221F);
 
   static ThemeData light() {
+    // ColorScheme derives consistent Material colors from the product color.
     final colorScheme = ColorScheme.fromSeed(
       seedColor: primaryColor,
       brightness: Brightness.light,

@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+import 'widgets/login_form.dart';
+
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  // Controllers let the page own and dispose the text input state.
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Add bottom padding when the keyboard is open so fields remain reachable.
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
     return Scaffold(
@@ -32,7 +51,11 @@ class LoginPage extends StatelessWidget {
                         style: theme.textTheme.bodyLarge,
                       ),
                       const SizedBox(height: 32),
-                      const _LoginFormPreview(),
+                      LoginForm(
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        onSubmit: _handleSubmit,
+                      ),
                       const Spacer(),
                       const SizedBox(height: 24),
                       Center(
@@ -51,6 +74,11 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _handleSubmit(String _email, String _password) {
+    // Real login behavior is added in later phases; this only closes the keyboard.
+    FocusScope.of(context).unfocus();
   }
 }
 
@@ -72,64 +100,6 @@ class _AppMark extends StatelessWidget {
         Icons.fact_check_outlined,
         color: Colors.white,
         size: 28,
-      ),
-    );
-  }
-}
-
-class _LoginFormPreview extends StatelessWidget {
-  const _LoginFormPreview();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Login',
-              style: theme.textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
-            const TextField(
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              autofillHints: [AutofillHints.email],
-              decoration: InputDecoration(
-                labelText: 'Email',
-                hintText: 'name@company.com',
-                prefixIcon: Icon(Icons.mail_outline_rounded),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const TextField(
-              obscureText: true,
-              textInputAction: TextInputAction.done,
-              autofillHints: [AutofillHints.password],
-              decoration: InputDecoration(
-                labelText: 'Password',
-                hintText: 'Enter your password',
-                prefixIcon: Icon(Icons.lock_outline_rounded),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Error messages will appear here after validation is added.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.error,
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Login'),
-            ),
-          ],
-        ),
       ),
     );
   }
