@@ -1,9 +1,11 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_starter/app/app.dart';
 import 'package:flutter_starter/app/router.dart';
+import 'package:flutter_starter/features/auth/state/auth_controller.dart';
+import 'package:flutter_starter/features/auth/state/auth_state.dart';
 
 void main() {
   testWidgets('Initial route shows the login page', (
@@ -32,15 +34,34 @@ void main() {
     expect(find.text('password123'), findsOneWidget);
   });
 
-  testWidgets('Dashboard route shows the dashboard placeholder', (
+  testWidgets('Dashboard route shows user identity and logout button', (
     WidgetTester tester,
   ) async {
+    final container = ProviderContainer(
+      overrides: [
+        authControllerProvider.overrideWith(_AuthenticatedAuthController.new),
+      ],
+    );
+    addTearDown(container.dispose);
+
     await tester.pumpWidget(
-      const ProviderScope(child: App(initialLocation: AppRoutePaths.dashboard)),
+      UncontrolledProviderScope(
+        container: container,
+        child: const App(initialLocation: AppRoutePaths.dashboard),
+      ),
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Dashboard placeholder'), findsOneWidget);
+    expect(find.text('Dashboard'), findsOneWidget);
+    expect(find.text('Welcome back, Employee.'), findsOneWidget);
+    expect(find.text('Employee'), findsOneWidget);
+    expect(find.text('employee@example.com'), findsOneWidget);
+    expect(find.byTooltip('Logout'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.logout_rounded));
+    await tester.pumpAndSettle();
+
+    expect(container.read(authControllerProvider), isA<AuthUnauthenticated>());
   });
 
   testWidgets('Unknown route shows not found', (WidgetTester tester) async {
@@ -51,4 +72,18 @@ void main() {
 
     expect(find.text('Not Found'), findsOneWidget);
   });
+}
+
+class _AuthenticatedAuthController extends AuthController {
+  @override
+  AuthState build() {
+    return const AuthState.authenticated(
+      user: AuthUser(
+        id: 'fake-employee',
+        email: 'employee@example.com',
+        name: 'Employee',
+      ),
+      accessToken: 'fake-access-token',
+    );
+  }
 }

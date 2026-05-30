@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/presentation/login_page.dart';
+import '../features/dashboard/presentation/dashboard_page.dart';
 
 class AppRoutePaths {
   AppRoutePaths._();
@@ -32,7 +33,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutePaths.login}) {
       GoRoute(
         path: AppRoutePaths.dashboard,
         name: AppRouteNames.dashboard,
-        builder: (context, state) => const DashboardPlaceholderPage(),
+        builder: (context, state) => const DashboardPage(),
       ),
       GoRoute(
         path: AppRoutePaths.notFound,
@@ -43,18 +44,6 @@ GoRouter createAppRouter({String initialLocation = AppRoutePaths.login}) {
     // Unknown paths render a page instead of leaving the user on a blank screen.
     errorBuilder: (context, state) => const NotFoundPlaceholderPage(),
   );
-}
-
-class DashboardPlaceholderPage extends StatelessWidget {
-  const DashboardPlaceholderPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const _RoutePlaceholderPage(
-      title: 'Dashboard placeholder',
-      icon: Icons.dashboard_outlined,
-    );
-  }
 }
 
 class NotFoundPlaceholderPage extends StatelessWidget {
