@@ -5,10 +5,7 @@ import 'router.dart';
 import 'theme.dart';
 
 class App extends StatefulWidget {
-  const App({
-    super.key,
-    this.initialLocation = AppRoutePaths.login,
-  });
+  const App({super.key, this.initialLocation = AppRoutePaths.login});
 
   final String initialLocation;
 

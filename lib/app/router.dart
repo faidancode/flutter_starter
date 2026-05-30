@@ -20,9 +20,7 @@ class AppRouteNames {
   static const notFound = 'not-found';
 }
 
-GoRouter createAppRouter({
-  String initialLocation = AppRoutePaths.login,
-}) {
+GoRouter createAppRouter({String initialLocation = AppRoutePaths.login}) {
   return GoRouter(
     initialLocation: initialLocation,
     routes: [
@@ -72,10 +70,7 @@ class NotFoundPlaceholderPage extends StatelessWidget {
 }
 
 class _RoutePlaceholderPage extends StatelessWidget {
-  const _RoutePlaceholderPage({
-    required this.title,
-    required this.icon,
-  });
+  const _RoutePlaceholderPage({required this.title, required this.icon});
 
   final String title;
   final IconData icon;
@@ -85,9 +80,7 @@ class _RoutePlaceholderPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Employee Attendance'),
-      ),
+      appBar: AppBar(title: const Text('Employee Attendance')),
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -98,11 +91,7 @@ class _RoutePlaceholderPage extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      icon,
-                      size: 40,
-                      color: theme.colorScheme.primary,
-                    ),
+                    Icon(icon, size: 40, color: theme.colorScheme.primary),
                     const SizedBox(height: 16),
                     Text(
                       title,

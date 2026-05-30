@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _handleSubmit(String _email, String _password) {
+  void _handleSubmit(String email, String password) {
     // Real login behavior is added in later phases; this only closes the keyboard.
     FocusScope.of(context).unfocus();
   }

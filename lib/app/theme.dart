@@ -56,9 +56,7 @@ class AppTheme {
         color: surfaceColor,
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -67,10 +65,7 @@ class AppTheme {
           horizontal: 16,
           vertical: 16,
         ),
-        hintStyle: const TextStyle(
-          color: Color(0xFF7A8782),
-          fontSize: 14,
-        ),
+        hintStyle: const TextStyle(color: Color(0xFF7A8782), fontSize: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
@@ -81,10 +76,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-            color: primaryColor,
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: primaryColor, width: 1.5),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -92,10 +84,7 @@ class AppTheme {
           minimumSize: const Size.fromHeight(52),
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
-          textStyle: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
