@@ -4,13 +4,30 @@ import 'package:flutter_starter/app/app.dart';
 import 'package:flutter_starter/app/router.dart';
 
 void main() {
-  testWidgets('Initial route shows the login placeholder', (
+  testWidgets('Initial route shows the login page', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(const App());
     await tester.pumpAndSettle();
 
-    expect(find.text('Login placeholder'), findsOneWidget);
+    expect(find.text('Employee Attendance'), findsOneWidget);
+    expect(find.text('Login'), findsOneWidget);
+    expect(find.text('Email'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
+  });
+
+  testWidgets('Login fields can be filled', (WidgetTester tester) async {
+    await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byType(EditableText).at(0),
+      'employee@example.com',
+    );
+    await tester.enterText(find.byType(EditableText).at(1), 'password123');
+
+    expect(find.text('employee@example.com'), findsOneWidget);
+    expect(find.text('password123'), findsOneWidget);
   });
 
   testWidgets('Dashboard route shows the dashboard placeholder', (

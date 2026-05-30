@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/auth/presentation/login_page.dart';
+
 class AppRoutePaths {
   AppRoutePaths._();
 
@@ -26,7 +28,7 @@ GoRouter createAppRouter({
       GoRoute(
         path: AppRoutePaths.login,
         name: AppRouteNames.login,
-        builder: (context, state) => const LoginPlaceholderPage(),
+        builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
         path: AppRoutePaths.dashboard,
@@ -41,18 +43,6 @@ GoRouter createAppRouter({
     ],
     errorBuilder: (context, state) => const NotFoundPlaceholderPage(),
   );
-}
-
-class LoginPlaceholderPage extends StatelessWidget {
-  const LoginPlaceholderPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const _RoutePlaceholderPage(
-      title: 'Login placeholder',
-      icon: Icons.login_rounded,
-    );
-  }
 }
 
 class DashboardPlaceholderPage extends StatelessWidget {
